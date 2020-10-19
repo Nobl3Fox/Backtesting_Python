@@ -9,7 +9,13 @@ from strategy import TestStrategy
 # Create a cerebro entity
 cerebro = bt.Cerebro()
 
-datapath = 'oracle.csv'
+# Set our desired cash start
+cerebro.broker.setcash(100000.0)
+
+# Set broker commission 0.1% or 0.001
+cerebro.broker.setcommission(commission=0)
+
+datapath = 'SPY.csv'
 
 # Create a Data Feed
 data = bt.feeds.YahooFinanceCSVData(
@@ -25,9 +31,6 @@ cerebro.adddata(data)
 
 # Add strategy to Cerebro
 cerebro.addstrategy(TestStrategy)
-
-# Set our desired cash start
-cerebro.broker.setcash(100000.0)
 
 # Print out the starting conditions
 print('Starting Portfolio Value: %.2f' % cerebro.broker.getvalue())
