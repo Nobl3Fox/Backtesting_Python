@@ -2,6 +2,9 @@ import backtrader as bt
 
 # Create a Stratey
 class TestStrategy(bt.Strategy):
+    params = (
+        
+    )
 
     def log(self, txt, dt=None):
         ''' Logging function fot this strategy'''
@@ -11,11 +14,12 @@ class TestStrategy(bt.Strategy):
     def __init__(self):
         # Keep a reference to the "close" line in the data[0] dataseries
         self.dataclose = self.datas[0].close
-
+        self.datalow = self.datas[0].low
         # To keep track of pending orders and buy price/commission
         self.order = None
         self.buyprice = None
         self.buycomm = None
+
 
     def notify_order(self, order):
         if order.status in [order.Submitted, order.Accepted]:
@@ -57,7 +61,7 @@ class TestStrategy(bt.Strategy):
     def next(self):
         # Simply log the closing price of the series from the reference
         self.log('Close, %.2f' % self.dataclose[0])
-
+        #self.order_target_percent(target=1.0)
         # Check if an order is pending ... if yes, we cannot send a 2nd one
         if self.order:
             return
@@ -66,22 +70,18 @@ class TestStrategy(bt.Strategy):
         if not self.position:
 
             # Not yet ... we MIGHT BUY if ...
-            if self.dataclose[0] < self.dataclose[-1]:
-                    # current close less than previous close
+            if self.dataclose[0] < self.datalow[-1]:
 
-                    if self.dataclose[-1] < self.dataclose[-2]:
-                        # previous close less than the previous close
+                # BUY, BUY, BUY!!! (with all possible default parameters)
+                self.log('BUY CREATE, %.2f' % self.dataclose[0])
 
-                        # BUY, BUY, BUY!!! (with default parameters)
-                        self.log('BUY CREATE, %.2f' % self.dataclose[0])
-
-                        # Keep track of the created order to avoid a 2nd order
-                        self.order = self.buy()
+                # Keep track of the created order to avoid a 2nd order
+                self.order = self.buy()
 
         else:
 
             # Already in the market ... we might sell
-            if len(self) >= (self.bar_executed + 5):
+            if len(self) >= (self.bar_executed + 3): 
                 # SELL, SELL, SELL!!! (with all possible default parameters)
                 self.log('SELL CREATE, %.2f' % self.dataclose[0])
 
