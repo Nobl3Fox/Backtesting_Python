@@ -12,28 +12,23 @@ cerebro = bt.Cerebro()
 
 # Set our desired cash start
 cerebro.broker.setcash(100000.0)
-#cerebro.broker.setcash(158000.0)
-#cerebro.broker.setcash(281000.0)
 
-# Add a FixedSize sizer according to the stake
+# Add a Percentage sizer according to the stake
 cerebro.addsizer(bt.sizers.PercentSizer, percents=98)
 #cerebro.addsizer(bt.sizers.FixedSize, stake=1000)
 
-# Set broker commission 0.1% or 0.001
+# Set broker commission
 cerebro.broker.setcommission(commission=0)
 
-datapath = 'VEA.csv'
+# Set tax rate (Work in Progress...) 
 
 # Create a Data Feed
+datapath = 'stock_data\SPY.csv'
+
 data = bt.feeds.YahooFinanceCSVData(
     dataname=datapath,
-    # Do not pass values before this date
+    # ensure the from and to are in range of the data
     fromdate=datetime.datetime(2008, 1, 1),
-    # fromdate=datetime.datetime(2000, 9, 30),
-    # fromdate=datetime.datetime(2010, 9, 30),
-    # Do not pass values after this date
-    # todate=datetime.datetime(2000, 9, 30),
-    # todate=datetime.datetime(2010, 9, 30),
     todate=datetime.datetime(2020, 9, 30),
     reverse=False)
 
