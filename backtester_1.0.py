@@ -3,7 +3,7 @@ from __future__ import (absolute_import, division, print_function, unicode_liter
 
 import backtrader as bt  # Import the backtrader platform
 import datetime  # For datetime objects
-from strategy import TestStrategy
+from strategy import FadeCloseStrategy
 
 # https://www.backtrader.com/docu/quickstart/quickstart/
 # Ideas
@@ -37,7 +37,7 @@ data = bt.feeds.YahooFinanceCSVData(
 cerebro.adddata(data)
 
 # Add strategy to Cerebro
-cerebro.addstrategy(TestStrategy)
+cerebro.addstrategy(FadeCloseStrategy)
 
 # Print out the starting conditions
 print('Starting Portfolio Value: %.2f' % cerebro.broker.getvalue())

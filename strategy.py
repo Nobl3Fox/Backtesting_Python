@@ -3,7 +3,7 @@ import backtrader as bt
 # Strategy Reference 
 # Use a mean reversion play: Fade Close Outside Previous Day's Range
 # https://adamhgrimes.com/moving-averages-digging-deeper/
-class TestStrategy(bt.Strategy):
+class FadeCloseStrategy(bt.Strategy):
     params = (
         
     )

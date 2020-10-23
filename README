@@ -4,7 +4,9 @@ ___
 ## yahoo_data_reader.py<h2> 
 - It reads stock_tickers.csv to create a list of assets(tickers) that were included in the first column. 
 - It takes that list and loops through it in order to scrape yahoo finance data and create a csv file for each ticker.
+- The data is poured into the stock_data folder, this folder is ignored by git so make sure to add it back.
 Note(I tried two approaches prior to this one in pullcsv.py file, but this approached worked the best.)
+
 ## strategy.py
 - It logs passing of trading days, 
 - It logs buy, sell, confirmation, and cancel order events
