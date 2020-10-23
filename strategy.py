@@ -1,6 +1,8 @@
 import backtrader as bt
 
-# Create a Stratey
+# Strategy Reference 
+# Use a mean reversion play: Fade Close Outside Previous Day's Range
+# https://adamhgrimes.com/moving-averages-digging-deeper/
 class TestStrategy(bt.Strategy):
     params = (
         
@@ -12,7 +14,7 @@ class TestStrategy(bt.Strategy):
         print('%s, %s' % (dt.isoformat(), txt))
 
     def __init__(self):
-        # Keep a reference to the "close" line in the data[0] dataseries
+        # Keep a reference to the "close" and "low" line in the data[0] dataseries
         self.dataclose = self.datas[0].close
         self.datalow = self.datas[0].low
         # To keep track of pending orders and buy price/commission

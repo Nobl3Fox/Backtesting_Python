@@ -1,0 +1,23 @@
+
+# File Summary
+___
+## yahoo_data_reader.py<h2> 
+- It reads stock_tickers.csv to create a list of assets(tickers) that were included in the first column. 
+- It takes that list and loops through it in order to scrape yahoo finance data and create a csv file for each ticker.
+Note(I tried two approaches prior to this one in pullcsv.py file, but this approached worked the best.)
+## strategy.py
+- It logs passing of trading days, 
+- It logs buy, sell, confirmation, and cancel order events
+- It operatates the buy and sell logic as to when trades are placed
+- It updates your P&L based on trade activity
+
+## backtester_1.0.py
+- It uses backtrader to define a portfolio size
+- Define how much of the portfolio to use per trade
+- (WORK IN PROGRESS) Define annual taxes out of profits
+- It then pulls in the csv data created by pullcsv.py
+- It loops through all the csv files in the stock_data folder
+- Analyzes the data by processing it through the strategy.py
+- A visual plot can be created to see performance results graphicly
+- (WORK IN PROGRESS) It writes all trading strategy performance results and metrics to asset_performance.csv
+

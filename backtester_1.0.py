@@ -5,6 +5,7 @@ import backtrader as bt  # Import the backtrader platform
 import datetime  # For datetime objects
 from strategy import TestStrategy
 
+# https://www.backtrader.com/docu/quickstart/quickstart/
 # Ideas
 # https://github.com/amberdata/jupyter-notebook/blob/master/market/Backtest%20BTC_LO_MCD_SMA_STF_Perct_TS.py
 # Create a cerebro entity
