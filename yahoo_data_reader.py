@@ -26,4 +26,7 @@ symbols = symbols[1:]
 for symbol in symbols:
     price_history = data.DataReader(symbol,web_data,start_date,end_date)
     df = pandas.DataFrame(price_history)
+    columnsTitles=["Open","High","Low","Close","Adj Close","Volume"]
+    df=df.reindex(columns=columnsTitles)
     df.to_csv('stock_data\{}.csv'.format(symbol))
+    print(symbol)

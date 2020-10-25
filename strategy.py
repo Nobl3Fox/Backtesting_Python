@@ -4,8 +4,9 @@ import backtrader as bt
 # Use a mean reversion play: Fade Close Outside Previous Day's Range
 # https://adamhgrimes.com/moving-averages-digging-deeper/
 class FadeCloseStrategy(bt.Strategy):
-    params = (
-        
+    params = dict(
+        stop_loss=0.02,
+        trail=False,
     )
 
     def log(self, txt, dt=None):
@@ -83,10 +84,14 @@ class FadeCloseStrategy(bt.Strategy):
         else:
 
             # Already in the market ... we might sell
-            if len(self) >= (self.bar_executed + 3): 
+            if len(self) >= (self.bar_executed + 5): 
                 # SELL, SELL, SELL!!! (with all possible default parameters)
                 self.log('SELL CREATE, %.2f' % self.dataclose[0])
 
                 # Keep track of the created order to avoid a 2nd order
                 self.order = self.sell()
+            elif not self.p.trail:
+                stop_price = self.order.executed.price * (1.0 - self.p.stop_loss)
+                self.sell(exectype=bt.Order.Stop, price=stop_price)
+            
 
