@@ -22,6 +22,10 @@ class FadeCloseStrategy(bt.Strategy):
         self.order = None
         self.buyprice = None
         self.buycomm = None
+        self.principle = None
+
+    """def taxes(self):
+        self.principle = """
 
 
     def notify_order(self, order):
@@ -90,8 +94,8 @@ class FadeCloseStrategy(bt.Strategy):
 
                 # Keep track of the created order to avoid a 2nd order
                 self.order = self.sell()
-            elif not self.p.trail:
+            """elif not self.p.trail:
                 stop_price = self.order.executed.price * (1.0 - self.p.stop_loss)
-                self.sell(exectype=bt.Order.Stop, price=stop_price)
+                self.sell(exectype=bt.Order.Stop, price=stop_price)"""
             
 

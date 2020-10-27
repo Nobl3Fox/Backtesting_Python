@@ -28,5 +28,5 @@ for symbol in symbols:
     df = pandas.DataFrame(price_history)
     columnsTitles=["Open","High","Low","Close","Adj Close","Volume"]
     df=df.reindex(columns=columnsTitles)
-    df.to_csv('stock_data\{}.csv'.format(symbol))
+    df.to_csv('stock_data/{}.csv'.format(symbol)) # switch back slash for mac vs pc
     print(symbol)
