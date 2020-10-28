@@ -16,11 +16,10 @@ datapath = 'stock_data/UPRO.csv' # change backslash for mac / vs pc \
 icap = 100000
 # Set position size - Percent of capital to deploy per trade
 PercSize = 99
-# Set percent trailing stop
-PercTrail = 0
+
 # Timeframe for the analysis
-start_date = [2011,1,1]
-end_date = [2020,10,1]
+start_date = [2010,1,1]
+end_date = [2015,1,1]
 
 # define helper functions
 def pretty_print(format, *args):
@@ -103,9 +102,6 @@ cerebro.addsizer(bt.sizers.PercentSizer, percents=PercSize)
 
 # Add our strategy
 cerebro.addstrategy(FadeCloseStrategy)
-
-# Create a Data Feed
-datapath = 'stock_data/SPXL.csv' # change backslash for mac / vs pc \
 
 data = bt.feeds.YahooFinanceCSVData(
     dataname=datapath,

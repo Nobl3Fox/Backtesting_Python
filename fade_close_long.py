@@ -5,7 +5,7 @@ import backtrader as bt
 # https://adamhgrimes.com/moving-averages-digging-deeper/
 class FadeCloseStrategy(bt.Strategy):
     params = dict(
-        stop_loss=0.02,
+        stop_loss=0.08,
         trail=False,
     )
 
@@ -22,11 +22,10 @@ class FadeCloseStrategy(bt.Strategy):
         self.order = None
         self.buyprice = None
         self.buycomm = None
-        self.principle = None
-
-    """def taxes(self):
-        self.principle = """
-
+        self.stop_price = 0
+        self.tax_rate = 0.45
+        self.principle = bt.brokers.get_value()
+        self.year = self.datas[0].datetime.date(0)
 
     def notify_order(self, order):
         if order.status in [order.Submitted, order.Accepted]:
@@ -37,22 +36,25 @@ class FadeCloseStrategy(bt.Strategy):
         # Attention: broker could reject order if not enough cash
         if order.status in [order.Completed]:
             if order.isbuy():
-                self.log(
-                    'BUY EXECUTED, Price: %.2f, Cost: %.2f, Comm %.2f' %
-                    (order.executed.price,
-                     order.executed.value,
-                     order.executed.comm))
-
                 self.buyprice = order.executed.price
                 self.buycomm = order.executed.comm
+                self.stop_price = self.order.executed.price * (1.0 - self.p.stop_loss)
+                self.bar_executed = len(self)
+                self.log(
+                    'BUY EXECUTED, Price: %.2f, Cost: %.2f, Comm %.2f, Stop %.2f' %
+                    (order.executed.price,
+                     order.executed.value,
+                     order.executed.comm,
+                     self.stop_price
+                     ))
+
+                
             else:  # Sell
                 self.log('SELL EXECUTED, Price: %.2f, Cost: %.2f, Comm %.2f' %
                          (order.executed.price,
                           order.executed.value,
                           order.executed.comm))
-
-            self.bar_executed = len(self)
-
+                self.bar_executed = None
         elif order.status in [order.Canceled, order.Margin, order.Rejected]:
             self.log('Order Canceled/Margin/Rejected')
 
@@ -91,11 +93,26 @@ class FadeCloseStrategy(bt.Strategy):
             if len(self) >= (self.bar_executed + 5): 
                 # SELL, SELL, SELL!!! (with all possible default parameters)
                 self.log('SELL CREATE, %.2f' % self.dataclose[0])
-
+                self.stop_price = 0
                 # Keep track of the created order to avoid a 2nd order
                 self.order = self.sell()
-            """elif not self.p.trail:
-                stop_price = self.order.executed.price * (1.0 - self.p.stop_loss)
-                self.sell(exectype=bt.Order.Stop, price=stop_price)"""
-            
+            elif self.stop_price >= self.dataclose:
+                self.log('STOP SELL CREATE, %.2f' % self.dataclose[0])
+                self.order = self.sell()
+                
+        
+""" 
+    def taxes(self):
+        # check if you have profit
+        # if do not exit taxes
+        if self.principle >= bt.brokers.get_value():
+        else: # update principle by adding net profits
+            profit = bt.brokers.get_value() - self.principle
+            tx = profit*self.tax_rate
+            nprofit = profit - tx
+            self.principle += nprofit
+            # deduct tax from broker
+            bt.brokers.add_cash(-tx)
+
+"""    
 
