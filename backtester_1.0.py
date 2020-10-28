@@ -10,14 +10,16 @@ from fade_close_long import FadeCloseStrategy
 # https://github.com/amberdata/jupyter-notebook/blob/master/market/Backtest%20BTC_LO_MCD_SMA_STF_Perct_TS.py
 
 # Set Variables
+# Create a Data Feed
+datapath = 'stock_data/UPRO.csv' # change backslash for mac / vs pc \
 # Set initial capital
 icap = 100000
 # Set position size - Percent of capital to deploy per trade
-PercSize = 98
+PercSize = 99
 # Set percent trailing stop
 PercTrail = 0
 # Timeframe for the analysis
-start_date = [1993,1,1]
+start_date = [2011,1,1]
 end_date = [2020,10,1]
 
 # define helper functions
@@ -103,7 +105,7 @@ cerebro.addsizer(bt.sizers.PercentSizer, percents=PercSize)
 cerebro.addstrategy(FadeCloseStrategy)
 
 # Create a Data Feed
-datapath = 'stock_data/UPRO.csv' # change backslash for mac / vs pc \
+datapath = 'stock_data/SPXL.csv' # change backslash for mac / vs pc \
 
 data = bt.feeds.YahooFinanceCSVData(
     dataname=datapath,
