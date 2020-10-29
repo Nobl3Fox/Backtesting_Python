@@ -19,7 +19,7 @@ PercSize = 99
 
 # Timeframe for the analysis
 start_date = [2010,1,1]
-end_date = [2015,1,1]
+end_date = [2015,2,1]
 
 # define helper functions
 def pretty_print(format, *args):
@@ -96,6 +96,9 @@ cerebro.addobserver(bt.observers.Trades)
 
 # Set the investment capital
 cerebro.broker.setcash(icap)
+
+# Set leverage/commission annual commission for leverage is 1.5% average holding period is 5 days adjusted for 1 year
+cerebro.broker.setcommission(commission=(0.015/(365/5)), leverage=200)
 
 # Set position size
 cerebro.addsizer(bt.sizers.PercentSizer, percents=PercSize)

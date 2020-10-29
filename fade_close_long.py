@@ -1,4 +1,5 @@
 import backtrader as bt
+import datetime
 
 # Strategy Reference 
 # Use a mean reversion play: Fade Close Outside Previous Day's Range
@@ -24,9 +25,8 @@ class FadeCloseStrategy(bt.Strategy):
         self.buycomm = None
         self.stop_price = 0
         self.tax_rate = 0.45
-        self.principle = bt.brokers.get_value()
-        self.year = self.datas[0].datetime.date(0)
-
+        self.principle = self.broker.getvalue()
+        self.nyear = None
     def notify_order(self, order):
         if order.status in [order.Submitted, order.Accepted]:
             # Buy/Sell order submitted/accepted to/by broker - Nothing to do
@@ -67,6 +67,24 @@ class FadeCloseStrategy(bt.Strategy):
         self.log('OPERATION PROFIT, GROSS %.2f, NET %.2f' %
                  (trade.pnl, trade.pnlcomm))
 
+    def taxes(self):
+        # check if you have profit
+        # if do not exit taxes
+        if self.principle >= self.broker.getvalue():
+            return
+        else: # update principle by adding net profits
+            profit = self.broker.getvalue() - self.principle
+            tx = profit*self.tax_rate
+            nprofit = profit - tx
+            self.principle += nprofit
+            # deduct tax from broker
+            self.log('Taxes Payed, gross %.2f, taxes %.2f, net %.2f' % (
+                self.principle + tx,
+                tx,
+                self.principle
+            ))
+            self.broker.add_cash(-tx)
+
     def next(self):
         # Simply log the closing price of the series from the reference
         self.log('Close, %.2f' % self.dataclose[0])
@@ -77,7 +95,12 @@ class FadeCloseStrategy(bt.Strategy):
 
         # Check if we are in the market
         if not self.position:
-
+            if self.nyear == None:
+                self.nyear =  int(str(self.datas[0].datetime.date(0))[0:4])
+            if int(str(self.datas[0].datetime.date(0))[0:4]) > self.nyear:
+                print("FIX ME")
+                self.taxes()
+                self.nyear = int(str(self.datas[0].datetime.date(0))[0:4])
             # Not yet ... we MIGHT BUY if ...
             if self.dataclose[0] < self.datalow[-1]:
 
@@ -101,18 +124,8 @@ class FadeCloseStrategy(bt.Strategy):
                 self.order = self.sell()
                 
         
-""" 
-    def taxes(self):
-        # check if you have profit
-        # if do not exit taxes
-        if self.principle >= bt.brokers.get_value():
-        else: # update principle by adding net profits
-            profit = bt.brokers.get_value() - self.principle
-            tx = profit*self.tax_rate
-            nprofit = profit - tx
-            self.principle += nprofit
-            # deduct tax from broker
-            bt.brokers.add_cash(-tx)
+ 
+    
 
-"""    
+    
 
